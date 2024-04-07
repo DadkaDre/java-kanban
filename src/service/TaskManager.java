@@ -6,7 +6,7 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
+
 
 public class TaskManager {
     private HashMap<Integer, Task> tasks;
@@ -101,7 +101,14 @@ public class TaskManager {
        subTasks.remove(id);
     }
 
-    public void removeIdEpics(int id) {epics.remove(id);}
+    public void removeIdEpics(int id) {
+        Epic epic = epics.get(id);
+        ArrayList<SubTask> listSubTasksThisEpic = epic.getListSubTasks();
+        for(SubTask subTask: listSubTasksThisEpic){
+            int idSubTask = subTask.getId();
+            subTasks.remove(idSubTask);
+        }
+        epics.remove(id);}
 
     public ArrayList<SubTask> getAllSubTasksEpic(Epic epic){
         return epic.getListSubTasks();

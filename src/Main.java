@@ -4,7 +4,7 @@ import model.SubTask;
 import model.Task;
 import service.TaskManager;
 
-import java.util.ArrayList;
+
 
 public class Main {
 
@@ -46,6 +46,12 @@ public class Main {
         System.out.println(taskManager.getAllEpics());
 
         System.out.println(taskManager.getAllSubTasksEpic(epic2));
+
+        taskManager.removeIdEpics(6);
+
+        System.out.println(taskManager.getAllSubTasks());
+        System.out.println(taskManager.getAllEpics());
+
     }
 
 }
