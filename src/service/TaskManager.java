@@ -62,7 +62,9 @@ public class TaskManager {
         subTasks.clear();
         }
 
-    public void deleteALLEpics() {epics.clear();}
+    public void deleteALLEpics() {
+        subTasks.clear();
+        epics.clear();}
 
     public Task getIdTask(int id) {return tasks.get(id);}
 
@@ -106,27 +108,27 @@ public class TaskManager {
     }
 
     public void updateStatus(Epic epic){
-        boolean allDone = true;
-        boolean allNew = true;
-        ArrayList<SubTask> list = epic.getListSubTasks();
+        boolean statusAllDone = true;
+        boolean statusAllNew = true;
+        ArrayList<SubTask> listSubTasksFromEpic = epic.getListSubTasks();
 
-        if (list == null){
+        if (listSubTasksFromEpic == null){
             epic.setStatus(Status.NEW);
             return;
         }
-        for (SubTask subTask: list){
+        for (SubTask subTask: listSubTasksFromEpic){
             Status status = subTask.getStatus();
             if (!status.equals(Status.NEW)){
-                   allNew = false;
+                   statusAllNew = false;
             }
             if (!status.equals(Status.DONE)) {
-                    allDone = false;
+                    statusAllDone = false;
             }
         }
-        if(allDone){
-            epic.setStatus(Status.DONE);
-        }else if(allNew){
+        if(statusAllNew||epic.getStatus()==null){
             epic.setStatus(Status.NEW);
+        }else if(statusAllDone){
+            epic.setStatus(Status.DONE);
         }else{
             epic.setStatus(Status.IN_PROGRESS);
         }
