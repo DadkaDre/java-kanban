@@ -69,7 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return list;
     }
-    //return new ArrayList<>(subTasks.values());}
+
 
     @Override
     public ArrayList<Epic> getAllEpics() {

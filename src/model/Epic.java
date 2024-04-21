@@ -14,7 +14,7 @@ public class Epic extends Task {
     public void addSubTask(SubTask subTask) {listSubTasks.add(subTask);}
     public void removeSubTask(SubTask subTask) {listSubTasks.remove(subTask);}
     public ArrayList<SubTask> getListSubTasks() {return listSubTasks;}
-    //public void setListSubTasks(ArrayList<SubTask> listSubTasks) {this.listSubTasks = listSubTasks;}
+
 
     public void deleteList() {listSubTasks.clear(); }
 
