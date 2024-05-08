@@ -1,19 +1,18 @@
 package service;
 
+import container.ObjectsContainerTest;
+import model.Epic;
 import model.Status;
-
+import model.SubTask;
+import model.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-import container.ObjectsContainerTest;
-import model.Task;
-import model.SubTask;
-import model.Epic;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Тестируем Менеджер задач")
 
@@ -331,11 +330,15 @@ class InMemoryTaskManagerTest {
         taskManager.getIdSubTasks(subTask.getId());
         taskManager.getIdEpics(epic.getId());
 
+        Epic epic1 = new Epic("Новый", "Новый", Status.NEW, epic.getId());
+        taskManager.updateEpic(epic1);
+        taskManager.getIdEpics(epic.getId());
+
         List<Task> historyList = taskManager.getHistory();
-        Task epic2 = historyList.get(1);
+        Task epic2 = historyList.get(2);
 
 
-        assertEquals(2, historyList.size(), "Кол-во элементов отличается");
+        assertEquals(3, historyList.size(), "Кол-во элементов отличается");
 
 
         assertEquals(epic.getName(), epic2.getName(), "Названия отличаются");
