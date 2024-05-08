@@ -55,5 +55,9 @@ public class Main {
         taskManager.removeIdEpics(epic.getId());
 
         System.out.println(taskManager.getHistory());
+
+        taskManager.deleteAllTasks();
+
+        System.out.println(taskManager.getHistory());
     }
 }

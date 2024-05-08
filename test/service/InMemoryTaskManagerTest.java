@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -141,11 +142,16 @@ class InMemoryTaskManagerTest {
     @DisplayName("Должен вернуть пустой список")
     @Test
     void shouldDeleteAllTasks() {
-        Task task = container.getTask();
-        taskManager.createTask(task);
-        Task task1 = container.getTask();
-        taskManager.createTask(task1);
 
+        InMemoryHistoryTaskManager inMemoryHistoryTaskManager = new InMemoryHistoryTaskManager();
+        inMemoryHistoryTaskManager.historyMap = new HashMap<>();
+
+        Task task = new Task("Задача", "Описание1", Status.NEW);
+        taskManager.createTask(task);
+        Task task1 = new Task("Задача2", "Описание2", Status.NEW);
+        taskManager.createTask(task1);
+        taskManager.getIdTask(task.getId());
+        taskManager.getIdTask(task1.getId());
 
         taskManager.deleteAllTasks();
         List<Task> taskList = taskManager.getAllTasks();
@@ -159,9 +165,14 @@ class InMemoryTaskManagerTest {
     @Test
     void shouldDeleteAllSubTasks() {
 
-        Epic epic = taskManager.createEpic(container.getEpic());
+        InMemoryHistoryTaskManager inMemoryHistoryTaskManager = new InMemoryHistoryTaskManager();
+        inMemoryHistoryTaskManager.historyMap = new HashMap<>();
+
+        Epic epic = taskManager.createEpic(new Epic("Эпик1", "Описание"));
         SubTask subTask = taskManager.createSubTask(new SubTask("Подзадача", "Описание",
                 Status.NEW, epic.getId()));
+
+        taskManager.getIdSubTasks(subTask.getId());
 
         taskManager.deleteAllSubTasks();
         List<SubTask> subtasksList = epic.getListSubTasks();
@@ -172,8 +183,13 @@ class InMemoryTaskManagerTest {
     @DisplayName("Должен удалять все эпики'")
     @Test
     void shouldDeleteALLEpics() {
-        Epic epic = taskManager.createEpic(container.getEpic());
-        Epic epic1 = taskManager.createEpic(container.getEpic());
+
+
+        Epic epic = taskManager.createEpic(new Epic("Эпик", "Описание"));
+        Epic epic1 = taskManager.createEpic(new Epic("эпик2", "Описание2"));
+
+        taskManager.getIdEpics(epic.getId());
+        taskManager.getIdEpics(epic1.getId());
 
         taskManager.deleteALLEpics();
 
@@ -270,6 +286,8 @@ class InMemoryTaskManagerTest {
     @Test
     void shouldRemoveIdTask() {
         Task task = taskManager.createTask(container.getTask());
+        taskManager.getIdTask(task.getId());
+
         taskManager.removeIdTask(task.getId());
 
         List<Task> tasksList = taskManager.getAllTasks();
@@ -281,7 +299,9 @@ class InMemoryTaskManagerTest {
     void shouldRemoveIdSubTasks() {
         Epic epic = taskManager.createEpic(container.getEpic());
 
-        SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание", Status.NEW, epic.getId()));
+        SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание",
+                Status.NEW, epic.getId()));
+        taskManager.getIdSubTasks(subTask.getId());
 
 
         taskManager.removeIdSubTasks(subTask.getId());
@@ -301,6 +321,8 @@ class InMemoryTaskManagerTest {
     @Test
     void shouldRemoveIdEpics() {
         Epic epic = taskManager.createEpic(container.getEpic());
+
+        taskManager.getIdEpics(epic.getId());
         taskManager.removeIdEpics(epic.getId());
 
         List<Epic> epicsList = taskManager.getAllEpics();
@@ -335,10 +357,10 @@ class InMemoryTaskManagerTest {
         taskManager.getIdEpics(epic.getId());
 
         List<Task> historyList = taskManager.getHistory();
-        Task epic2 = historyList.get(2);
+        Task epic2 = historyList.get(1);
 
 
-        assertEquals(3, historyList.size(), "Кол-во элементов отличается");
+        assertEquals(2, historyList.size(), "Кол-во элементов отличается");
 
 
         assertEquals(epic.getName(), epic2.getName(), "Названия отличаются");

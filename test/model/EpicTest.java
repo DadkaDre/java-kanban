@@ -23,7 +23,7 @@ class EpicTest {
 
         Epic epic = container.getEpic();
         taskManager.createEpic(epic);
-        SubTask subTask = container.getSubTask();
+        SubTask subTask = new SubTask("Подзадача", "Описание", Status.NEW, epic.getId());
         taskManager.createSubTask(subTask);
 
         epic.addSubTask(subTask);
