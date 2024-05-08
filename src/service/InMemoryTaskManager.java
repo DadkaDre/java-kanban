@@ -188,9 +188,10 @@ public class InMemoryTaskManager implements TaskManager {
 
         return epic.getListSubTasks();
     }
+
     @Override
     public List<Task> getHistory() {
-        return   historyManager.getHistory();
+        return historyManager.getHistory();
     }
 
     private void updateStatus(Epic epic) {
@@ -219,9 +220,11 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(Status.IN_PROGRESS);
         }
     }
+
     public HashMap<Integer, Task> getTasks() {
         return tasks;
     }
+
     public HashMap<Integer, SubTask> getSubTasks() {
         return subTasks;
     }

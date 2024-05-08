@@ -12,7 +12,7 @@ public class InMemoryHistoryTaskManager implements HistoryManager {
 
 
     @Override
-    public void add(Task task){
+    public void add(Task task) {
         if (historyMap.get(task.getId()) == null) {
             System.out.println("Смотрим задачу в первый раз");
             linkLast(task);
