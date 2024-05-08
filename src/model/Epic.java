@@ -1,8 +1,9 @@
 package model;
 import java.util.ArrayList;
-public class Epic extends Task {
-    private final ArrayList<SubTask> listSubTasks = new ArrayList<>();
 
+public class Epic extends Task {
+
+    private final ArrayList<SubTask> listSubTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description, null);
