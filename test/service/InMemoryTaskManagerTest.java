@@ -247,7 +247,7 @@ class InMemoryTaskManagerTest {
 
         Task task2 = new Task("Обновленная подзадача", "Обновленное описание", Status.NEW, task.getId());
 
-        taskManager.updateTask(task);
+        taskManager.updateTask(task2);
 
         Task task3 = taskManager.getIdTask(task.getId());
 
