@@ -26,7 +26,8 @@ class InMemoryHistoryTaskManagerTest {
         inMemoryHistoryTaskManager.add(task2);
 
 
-        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task2), "Кол-во задач не совпадает");
+        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task2), "Кол-во задач после " +
+                "добавления не совпадает в лист истории не совпадает с начальным");
 
     }
 
@@ -44,11 +45,12 @@ class InMemoryHistoryTaskManagerTest {
 
         inMemoryHistoryTaskManager.remove(task.getId());
 
-        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task2, task3), "Кол-во задач не совпадает");
+        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task2, task3), "Кол-во задач не совпадает" +
+                "после удаления одной задачи со списком из двух подзадач");
 
     }
 
-    @DisplayName("должен сравнить список после удаления второго элемента")
+    @DisplayName("Должен сравнить список после удаления второго элемента")
     @Test
     void removeMiddle() {
         Task task = taskManager.createTask(container.getTask());
@@ -62,7 +64,8 @@ class InMemoryHistoryTaskManagerTest {
 
         inMemoryHistoryTaskManager.remove(task2.getId());
 
-        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task3));
+        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task3), "Кол-во элементов после " +
+                "удаления задачи не совпадает со списком из двух элементов");
     }
 
     @DisplayName("Должен удалить последний элемент и сравнить список")
@@ -79,7 +82,8 @@ class InMemoryHistoryTaskManagerTest {
 
         inMemoryHistoryTaskManager.remove(task3.getId());
 
-        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task2));
+        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task2), "Кол-во элементов после " +
+                "удаления задачи не совпадает со списком из двух элементов");
     }
 
     @DisplayName("Должен сравнить кол-во элементов в списке истории")
@@ -94,6 +98,8 @@ class InMemoryHistoryTaskManagerTest {
         Task task3 = taskManager.createTask(container.getTask());
         inMemoryHistoryTaskManager.add(task3);
 
-        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task2, task3));
+        assertEquals(inMemoryHistoryTaskManager.getHistory(), List.of(task, task2, task3), "Кол-во элементов " +
+                "в списке историй должно совпадать с кол-вом задач при добавлении");
+
     }
 }

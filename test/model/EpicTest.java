@@ -31,7 +31,7 @@ class EpicTest {
         ArrayList<SubTask> epicSubTasksList = epic.getListSubTasks();
         SubTask subTask1 = epicSubTasksList.getFirst();
 
-        assertEquals(subTask, subTask1, "Задачи разные");
+        assertEquals(subTask, subTask1, "Подзадача после метода create отличается в списке подзадач");
 
 
     }
@@ -48,7 +48,8 @@ class EpicTest {
 
         ArrayList<SubTask> newList = new ArrayList<>();
 
-        assertEquals(newList, epicSubTasksList, "Не совпадает с пустым листом");
+        assertEquals(newList, epicSubTasksList, "Лист подзадач после метода всех подзадач, не совпадает с " +
+                "пустым листом");
     }
 
     @Test
@@ -57,10 +58,14 @@ class EpicTest {
         SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId()));
         ArrayList<SubTask> epicSubTasksList = epic.getListSubTasks();
-        assertEquals(1, epicSubTasksList.size(), "Кол-во элементов не совпадает");
+
+        assertEquals(1, epicSubTasksList.size(), "Кол-во подзадач после добавления в лист подзадач" +
+                " не совпадает");
+
         epic.deleteList();
 
-        assertEquals(0, epicSubTasksList.size(), "Кол-во элементов не равно нулю");
+        assertEquals(0, epicSubTasksList.size(), "Кол-во элементов в листе подзадач, после метода " +
+                "удаления  не равно нулю");
 
     }
 

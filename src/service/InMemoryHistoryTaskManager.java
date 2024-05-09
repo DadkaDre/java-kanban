@@ -25,7 +25,11 @@ public class InMemoryHistoryTaskManager implements HistoryManager {
     @Override
     public void remove(int id) {
         Node<Task> node = historyMap.get(id);
+        if (historyMap.get(id) == null) {
+            System.out.println("Задачу c id:" + id + " еще не смотрели");
+        } else {
         removeNode(node);
+        }
     }
 
     @Override

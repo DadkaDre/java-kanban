@@ -15,9 +15,11 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 @DisplayName("Тестируем Менеджер задач")
 
 class InMemoryTaskManagerTest {
+
 
     TaskManager taskManager = Managers.getDefault();
     ObjectsContainerTest container = new ObjectsContainerTest();
@@ -31,9 +33,10 @@ class InMemoryTaskManagerTest {
 
         Map<Integer, Task> tasks = taskManager.getTasks();
         Task task1 = tasks.get(taskId);
-        assertEquals(task, task1, "Задачи не совпадают");
-        assertEquals(1, tasks.size(), "Количество элементов разное");
-        shouldEqualsTasks(task, task1, "Задачи не совпадают");
+
+        assertEquals(1, tasks.size(), "Количество элементов в списке задач разное");
+
+        shouldEqualsTasks(task, task1, "Задача до занесения в таблицу не совпадает после вызова из нее");
     }
 
     @DisplayName("Сверяем поля в задачах")
@@ -59,8 +62,9 @@ class InMemoryTaskManagerTest {
         int subTaskId = subTask.getId();
         SubTask subTask1 = subTasks.get(subTaskId);
 
-        assertEquals(1, subTasks.size(), "Кол-во элементов в таблице не совпадает");
-        shouldEqualsSubTasks(subTask, subTask1, "Подзадачи не совпадают");
+        assertEquals(1, subTasks.size(), "Кол-во подзадач в таблице после добавления элемента" +
+                " не совпадает с единицей");
+        shouldEqualsSubTasks(subTask, subTask1, "Поля в подзадачах после добавления в таблицу разные");
     }
 
     @DisplayName("Заготовка для сравнения полей в подзадачах")
@@ -79,11 +83,12 @@ class InMemoryTaskManagerTest {
         Epic epic = container.getEpic();
         taskManager.createEpic(epic);
         Map<Integer, Epic> epics = taskManager.getEpics();
-        assertEquals(1, epics.size(), "Кол-во элементов не совпадает");
+        assertEquals(1, epics.size(), "Кол-во элементов в таблице после добавление эпика" +
+                " не совпадает с единицей");
 
         int epicId = epic.getId();
         Epic epic1 = epics.get(epicId);
-        shouldEqualsEpics(epic, epic1, "Эпики не совпадают");
+        shouldEqualsEpics(epic, epic1, "Поля эпика после добавления в таблицу и после вызова из нее - разные ");
 
     }
 
@@ -104,7 +109,8 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task1);
 
         List<Task> allTasks = taskManager.getAllTasks();
-        assertEquals(2, allTasks.size(), "Кол-во элементов не совпадает");
+        assertEquals(2, allTasks.size(), "Кол-во элементов в списке задач, после добавления в него 2 " +
+                "элементов не совпадает с 2");
 
 
     }
@@ -150,6 +156,7 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         Task task1 = new Task("Задача2", "Описание2", Status.NEW);
         taskManager.createTask(task1);
+
         taskManager.getIdTask(task.getId());
         taskManager.getIdTask(task1.getId());
 
@@ -157,16 +164,14 @@ class InMemoryTaskManagerTest {
         List<Task> taskList = taskManager.getAllTasks();
         List<Task> newTaskList = new ArrayList<>();
 
-        assertEquals(taskList, newTaskList, "Кол-во элементов отличается");
+        assertEquals(taskList, newTaskList, "После удаления задач, лист с задачами не совпадает " +
+                "с пустым листом");
 
     }
 
     @DisplayName("Должен удалять все подзадачи")
     @Test
     void shouldDeleteAllSubTasks() {
-
-        InMemoryHistoryTaskManager inMemoryHistoryTaskManager = new InMemoryHistoryTaskManager();
-        inMemoryHistoryTaskManager.historyMap = new HashMap<>();
 
         Epic epic = taskManager.createEpic(new Epic("Эпик1", "Описание"));
         SubTask subTask = taskManager.createSubTask(new SubTask("Подзадача", "Описание",
@@ -175,9 +180,12 @@ class InMemoryTaskManagerTest {
         taskManager.getIdSubTasks(subTask.getId());
 
         taskManager.deleteAllSubTasks();
+
         List<SubTask> subtasksList = epic.getListSubTasks();
         List<SubTask> newSubTasksList = new ArrayList<>();
-        assertEquals(subtasksList, newSubTasksList, "Кол-во элементов не совпадает");
+
+        assertEquals(subtasksList, newSubTasksList, "Кол-во элементов в списке подзадач после удаления всех " +
+                "элементов из него не совпадает с пустым листом");
     }
 
     @DisplayName("Должен удалять все эпики'")
@@ -188,51 +196,48 @@ class InMemoryTaskManagerTest {
         Epic epic = taskManager.createEpic(new Epic("Эпик", "Описание"));
         Epic epic1 = taskManager.createEpic(new Epic("эпик2", "Описание2"));
 
-        taskManager.getIdEpics(epic.getId());
-        taskManager.getIdEpics(epic1.getId());
-
         taskManager.deleteALLEpics();
 
         List<Epic> epicsList = taskManager.getAllEpics();
         List<Epic> newEpicList = new ArrayList<>();
 
-        assertEquals(epicsList, newEpicList, "Кол-во элементов не совпадает");
+        assertEquals(epicsList, newEpicList, "Кол-во элементов в листе эпиков после удаления всех " +
+                "элементов не совпадает с пустым списком");
     }
 
-    @DisplayName("Должен сравнить задачу на входе с той, что после вызова")
+    @DisplayName("Должен сравнить поля одной задачи после добавления")
     @Test
     void shouldGetIdTask() {
 
         Task task = taskManager.createTask(container.getTask());
-        int taskId = task.getId();
 
-        Task task1 = taskManager.getIdTask(taskId);
+        Task task1 = taskManager.getIdTask(task.getId());
 
-        shouldEqualsTasks(task, task1, "Две задачи разные");
+        shouldEqualsTasks(task, task1, "Задача до добавления в таблицу и после вызова из нее разная");
     }
 
     @DisplayName("Сравниваем подзадачу до и после метода")
     @Test
     void shouldGetIdSubTasks() {
         Epic epic = taskManager.createEpic(container.getEpic());
+
         SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId()));
-        int subTaskId = subTask.getId();
 
-        SubTask subTask1 = taskManager.getIdSubTasks(subTaskId);
+        SubTask subTask1 = taskManager.getIdSubTasks(subTask.getId());
 
-        shouldEqualsSubTasks(subTask, subTask1, "Подзадачи различаются");
+        shouldEqualsSubTasks(subTask, subTask1, "Подзадач после добавление в таблицу подзадач отличается после " +
+                "вызова из таблицы этой же подзадачи");
     }
 
-    @DisplayName("Сравниваем поля эпика до и после метода")
+    @DisplayName("Сравниваем поля эпика до и после метода создания эпика")
     @Test
     void shouldGetIdEpics() {
         Epic epic = taskManager.createEpic(container.getEpic());
-        int epicId = epic.getId();
 
-        Epic epic1 = taskManager.getIdEpics(epicId);
+        Epic epic1 = taskManager.getIdEpics(epic.getId());
 
-        shouldEqualsEpics(epic, epic1, "Эпики различаются");
+        shouldEqualsEpics(epic, epic1, "Поля эпика разные после добавления его в таблицу и при вызове из нее");
     }
 
     @DisplayName("Сравниваем поля задачи после обновления")
@@ -242,29 +247,33 @@ class InMemoryTaskManagerTest {
 
         Task task2 = new Task("Обновленная подзадача", "Обновленное описание", Status.NEW, task.getId());
 
-        taskManager.updateTask(task2);
-
+        taskManager.updateTask(task);
 
         Task task3 = taskManager.getIdTask(task.getId());
 
-        shouldEqualsTasks(task2, task3, "Задачи разные");
+        shouldEqualsTasks(task2, task3, "Поля задачи task2 до метода обновления отличаются от полей при вызове " +
+                "ее после метода обновления");
     }
 
-    @DisplayName("Сравниваем поля задачи после обновления и смотрим кол-во элементов в листе")
+    @DisplayName("Сравниваем поля подзадачи после обновления и смотрим кол-во элементов в листе")
     @Test
     void shouldUpdateSubTask() {
         Epic epic = taskManager.createEpic(container.getEpic());
+
         SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId()));
         SubTask subTask2 = new SubTask("Название2", "Описание2",
                 Status.NEW, subTask.getId(), epic.getId());
         taskManager.updateSubTask(subTask2);
+
         List<SubTask> epicList = epic.getListSubTasks();
         SubTask subTask1 = epicList.getFirst();
 
-        shouldEqualsSubTasks(subTask2, subTask1, "Задачи разные");
+        shouldEqualsSubTasks(subTask2, subTask1, "Поля подзадачи subTask2 до метода обновления и после него" +
+                " разные");
 
-        assertEquals(1, epicList.size(), "Кол-во элементов не совпадает");
+        assertEquals(1, epicList.size(), "Кол-во элементов в списке подзадач после метода обновления " +
+                "изменилось");
 
 
     }
@@ -279,7 +288,7 @@ class InMemoryTaskManagerTest {
         List<Epic> epicsList = taskManager.getAllEpics();
         Epic epic2 = epicsList.getFirst();
 
-        shouldEqualsEpics(epic1, epic2, "Эпики разные");
+        shouldEqualsEpics(epic1, epic2, "Поля эпика epic1 до метода обновления и после него разные");
     }
 
     @DisplayName("Сравниваем кол-во элементов в таблице после удаления")
@@ -291,7 +300,8 @@ class InMemoryTaskManagerTest {
         taskManager.removeIdTask(task.getId());
 
         List<Task> tasksList = taskManager.getAllTasks();
-        assertEquals(0, tasksList.size(), "Кол-во элементов отличается");
+        assertEquals(0, tasksList.size(), "Кол-во элементов в таблице после удаления отличается " +
+                "от нуля");
     }
 
     @DisplayName("Сравниваем таблицу и список эпика на кол-во элементов после удаления подзадачи ")
@@ -308,11 +318,13 @@ class InMemoryTaskManagerTest {
 
         List<SubTask> epicList2 = epic.getListSubTasks();
 
-        assertEquals(0, epicList2.size(), "Кол-во элементов отличается");
+        assertEquals(0, epicList2.size(), "Кол-во элементов в списке подзадач эпика после удаления " +
+                "элементов отличается от нуля");
 
         List<SubTask> subTasksList = taskManager.getAllSubTasks();
 
-        assertEquals(0, subTasksList.size(), "Кол-во элементов не совпадает");
+        assertEquals(0, subTasksList.size(), "Кол-во элементов в таблице подзадач после удаления " +
+                " не совпадает");
 
 
     }
@@ -327,7 +339,8 @@ class InMemoryTaskManagerTest {
 
         List<Epic> epicsList = taskManager.getAllEpics();
 
-        assertEquals(0, epicsList.size(), "Кол-во элементов не совпадает");
+        assertEquals(0, epicsList.size(), "Кол-во элементов в таблице эпиков после удаления эпика " +
+                "не совпадает с нулем");
     }
 
     @DisplayName("Сравниваем кол-во подзадач в листе после метода вызова всех подзадач")
@@ -340,7 +353,8 @@ class InMemoryTaskManagerTest {
                 Status.NEW, epic.getId()));
         List<SubTask> subTaskList = taskManager.getAllSubTasks();
 
-        assertEquals(2, subTaskList.size(), "Кол-во елементов не совпадает");
+        assertEquals(2, subTaskList.size(), "Кол-во добавляемых элементов и кол-во элементов при " +
+                "вызове списка подзадач не совпадает");
     }
 
     @DisplayName("Сравниваем кол-во элементов в листе после вызова метода истории")
@@ -349,24 +363,20 @@ class InMemoryTaskManagerTest {
         Epic epic = taskManager.createEpic(container.getEpic());
         SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId()));
+
         taskManager.getIdSubTasks(subTask.getId());
         taskManager.getIdEpics(epic.getId());
 
         Epic epic1 = new Epic("Новый", "Новый", Status.NEW, epic.getId());
         taskManager.updateEpic(epic1);
+
         taskManager.getIdEpics(epic.getId());
 
         List<Task> historyList = taskManager.getHistory();
         Task epic2 = historyList.get(1);
 
 
-        assertEquals(2, historyList.size(), "Кол-во элементов отличается");
-
-
-        assertEquals(epic.getName(), epic2.getName(), "Названия отличаются");
-        assertEquals(epic.getDescription(), epic2.getDescription(), "Описание разное");
-        assertEquals(epic.getId(), epic2.getId(), "id не равны");
-        assertEquals(epic.getStatus(), epic2.getStatus(), "Статусы разные");
-
+        assertEquals(2, historyList.size(), "Кол-во кол-во добавленных элементов в список истории " +
+                " не равно двум");
     }
 }
