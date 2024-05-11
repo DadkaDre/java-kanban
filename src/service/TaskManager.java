@@ -4,8 +4,8 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
     Task createTask(Task task);
@@ -46,7 +46,7 @@ public interface TaskManager {
 
     List<SubTask> getAllSubTasksEpic(Epic epic);
 
-    List<Task>getHistory();
+    List<Task> getHistory();
 
     Map<Integer, Task> getTasks();
 

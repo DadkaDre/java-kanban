@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 public class ObjectsContainerTest {
 
     private final Task task = new Task("Тестовая задача", "Тестовое описание", Status.NEW);
-    private final Epic epic = new Epic("Тестовый эпик","Тестовое описание");
+    private final Epic epic = new Epic("Тестовый эпик", "Тестовое описание");
     private final SubTask subTask = new SubTask("Тестовая подзадача", "Тестовое описание",
             Status.NEW, epic.getId());
 
@@ -23,7 +23,9 @@ public class ObjectsContainerTest {
         return epic;
     }
 
-    public SubTask getSubTask(){return subTask;}
+    public SubTask getSubTask() {
+        return subTask;
+    }
 }
 
 
