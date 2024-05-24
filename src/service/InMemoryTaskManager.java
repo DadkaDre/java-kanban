@@ -1,5 +1,6 @@
 package service;
 
+import exception.ManagerSaveException;
 import model.Epic;
 import model.Status;
 import model.SubTask;
@@ -13,17 +14,20 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager {
 
 
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, SubTask> subTasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HistoryManager historyManager;
+    protected HashMap<Integer, Task> tasks;
+    protected HashMap<Integer, SubTask> subTasks;
+    protected HashMap<Integer, Epic> epics;
+    protected HistoryManager historyManager;
     int counterId = 1;
+
+    protected int seq;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.tasks = new HashMap<>();
         this.subTasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.historyManager = historyManager;
+        seq = 0;
     }
 
     private int generateId() {
@@ -42,6 +46,10 @@ public class InMemoryTaskManager implements TaskManager {
         subTask.setId(generateId());
         subTasks.put(subTask.getId(), subTask);
         Epic epic = epics.get(subTask.getEpicId());
+        if (epic == null) {
+
+            throw new ManagerSaveException("Нет такого эпика: " + subTask.getEpicId());
+        }
         epic.addSubTask(subTask);
         updateStatus(epic);
         return subTask;
@@ -132,8 +140,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubTask(SubTask subTask) {
-        int epicId = subTask.getEpicId();
-        Epic epic = epics.get(epicId);
+        Epic epic = epics.get(subTask.getEpicId());
+        if (epic == null) {
+            throw new ManagerSaveException("Нет эпика по id: " + subTask.getEpicId());
+        }
         epic.removeSubTask(subTask);
         epic.addSubTask(subTask);
         updateStatus(epic);
@@ -144,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
         Epic saved = epics.get(epic.getId());
         if (saved == null) {
-            return;
+            throw new ManagerSaveException("Нет такого эпика: " + epic.getId());
         }
         saved.setName(epic.getName());
         saved.setDescription(epic.getDescription());
@@ -161,8 +171,10 @@ public class InMemoryTaskManager implements TaskManager {
 
         historyManager.remove(id);
         SubTask subTask = subTasks.remove(id);
-        int epicsId = subTask.getEpicId();
-        Epic epic = epics.get(epicsId);
+        Epic epic = epics.get(subTask.getEpicId());
+        if (epic == null) {
+            throw new ManagerSaveException("Нет такого эпика: " + subTask.getEpicId());
+        }
         epic.removeSubTask(subTask);
         updateStatus(epic);
 

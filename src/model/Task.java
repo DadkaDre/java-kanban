@@ -2,11 +2,14 @@ package model;
 
 import java.util.Objects;
 
+
 public class Task {
     private String name;
     private String description;
     private int id;
     private Status status;
+    private TaskType type;
+
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -19,6 +22,18 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = id;
+    }
+
+    public Task(String name, String description, Status status, int id, TaskType type) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.id = id;
+        this.type = type;
+    }
+
+    public Integer getEpicId() {
+        return null;
     }
 
     public String getName() {
@@ -53,6 +68,9 @@ public class Task {
         this.status = status;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
 
     @Override
     public String toString() {
