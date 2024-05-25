@@ -28,7 +28,7 @@ public class InMemoryHistoryTaskManager implements HistoryManager {
         if (historyMap.get(id) == null) {
             System.out.println("Задачу c id:" + id + " еще не смотрели");
         } else {
-        removeNode(node);
+            removeNode(node);
         }
     }
 

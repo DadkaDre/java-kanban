@@ -1,0 +1,3 @@
+id,type,name,status,description,epicId:
+1,EPIC,Тестовый эпик,NEW,Тестовое описание,null
+2,SUBTASK,Подзадача,NEW,Описание,1
