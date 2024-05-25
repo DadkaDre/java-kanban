@@ -9,32 +9,32 @@ import model.TaskType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    private final Path path;
+    private final File file;
 
-    public FileBackedTaskManager(Path path, Charset charset) {
-        this(Managers.getDefaultHistory(), path);
+    public FileBackedTaskManager(File file, Charset charset) {
+        this(Managers.getDefaultHistory(), file);
     }
 
-    public FileBackedTaskManager(HistoryManager historyManager, Path path) {
+    public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
-        this.path = path;
+        this.file = file;
     }
 
 
     public FileBackedTaskManager(HistoryManager historyManager) {
         super(historyManager);
-        path = Paths.get("D:/Programs/IntelliJ IDEA/projects/java-kanban/resources/task.CSV");
+        file = Paths.get("task.CSV").toFile();
 
     }
 
@@ -43,8 +43,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         loadFromFile();
     }
 
-    public static FileBackedTaskManager loadFromFile(Path path) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(path, StandardCharsets.UTF_8);
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file, StandardCharsets.UTF_8);
         manager.init();
         return manager;
     }
@@ -52,7 +52,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() {
 
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(String.valueOf(path), StandardCharsets.UTF_8))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             writer.write("id,type,name,status,description,epicId:");
             writer.newLine();
             for (Task task : tasks.values()) {
@@ -78,7 +78,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void loadFromFile() {
         int maxId = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(path), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             reader.readLine();
             while (reader.ready()) {
                 String line = reader.readLine();

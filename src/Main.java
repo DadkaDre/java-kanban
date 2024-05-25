@@ -5,7 +5,7 @@ import service.FileBackedTaskManager;
 import service.Managers;
 import service.TaskManager;
 
-import java.nio.file.Paths;
+import java.io.File;
 
 
 public class Main {
@@ -20,7 +20,7 @@ public class Main {
         SubTask subTask = new SubTask("Подзадача", "Описание", Status.NEW, epic.getId());
         taskManager1.createSubTask(subTask);
 
-        TaskManager taskManager = FileBackedTaskManager.loadFromFile(Paths.get("resources/task.CSV"));
+        TaskManager taskManager = FileBackedTaskManager.loadFromFile(new File("task.CSV"));
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getSubTasks());
 
