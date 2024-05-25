@@ -34,7 +34,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager(HistoryManager historyManager) {
         super(historyManager);
-        path = Paths.get("resources/task.CSV");
+        path = Paths.get("D:/Programs/IntelliJ IDEA/projects/java-kanban/resources/task.CSV");
 
     }
 
