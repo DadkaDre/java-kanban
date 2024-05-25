@@ -9,31 +9,32 @@ import model.TaskType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    private final File file;
+    private final Path path;
 
-    public FileBackedTaskManager(File file, Charset charset) {
-        this(Managers.getDefaultHistory(), file);
+    public FileBackedTaskManager(Path path, Charset charset) {
+        this(Managers.getDefaultHistory(), path);
     }
 
-    public FileBackedTaskManager(HistoryManager historyManager, File file) {
+    public FileBackedTaskManager(HistoryManager historyManager, Path path) {
         super(historyManager);
-        this.file = file;
+        this.path = path;
     }
 
 
     public FileBackedTaskManager(HistoryManager historyManager) {
         super(historyManager);
-        file = new File("task.CSV");
+        path = Paths.get("resources/task.CSV");
 
     }
 
@@ -42,8 +43,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         loadFromFile();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file, StandardCharsets.UTF_8);
+    public static FileBackedTaskManager loadFromFile(Path path) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(path, StandardCharsets.UTF_8);
         manager.init();
         return manager;
     }
@@ -51,7 +52,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() {
 
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(String.valueOf(path), StandardCharsets.UTF_8))) {
             writer.write("id,type,name,status,description,epicId:");
             writer.newLine();
             for (Task task : tasks.values()) {
@@ -65,8 +66,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
             for (SubTask subTask : subTasks.values()) {
-                //  String string = String.format("%30s,%30s,%30s,%30s,%30s,%30s,",TaskConverter.toString(subTask));
-                //  System.out.println(string);
 
                 writer.write(TaskConverter.toString(subTask));
                 writer.newLine();
@@ -79,7 +78,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void loadFromFile() {
         int maxId = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(path), StandardCharsets.UTF_8))) {
             reader.readLine();
             while (reader.ready()) {
                 String line = reader.readLine();
@@ -128,20 +127,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case SUBTASK -> new SubTask(taskArray[2], taskArray[4], Status.valueOf(taskArray[3]),
                     Integer.parseInt(taskArray[0]), Integer.parseInt(taskArray[5]), TaskType.valueOf(taskArray[1]));
         };
-
-         /* Integer id = Integer.valueOf(taskArray[0]);
-            TaskType type = TaskType.valueOf(taskArray[1]);
-            String name = taskArray[2];
-            Status status = Status.valueOf(taskArray[3]);
-            String description = taskArray[4];
-            Integer epicId = Integer.parseInt(taskArray[5]);
-
-
-             switch (type) {
-                case TASK -> new Task(name, description, status, id);
-                case SUBTASK -> new SubTask(name, description, status, id, epicId);
-                case EPIC -> new Epic(name, description, status, id);
-                default -> throw new ManagerSaveException("Нет такого типа задач");*/
 
 
         return task;
