@@ -1,5 +1,9 @@
 package model;
 
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 
@@ -9,12 +13,27 @@ public class Task {
     private int id;
     private Status status;
     private TaskType type;
-
+    private LocalDateTime startTime;
+    private Duration duration;
+    private LocalDateTime endTime;
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.startTime = LocalDateTime.now();
+        this.duration = Duration.ofMinutes(15);
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
+
+    }
+
+    public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
     public Task(String name, String description, Status status, int id) {
@@ -22,6 +41,20 @@ public class Task {
         this.description = description;
         this.status = status;
         this.id = id;
+        this.startTime = LocalDateTime.now();
+        this.duration = Duration.ofMinutes(15);
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
+    }
+
+
+    public Task(String name, String description, Status status, int id, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.id = id;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
     public Task(String name, String description, Status status, int id, TaskType type) {
@@ -30,6 +63,24 @@ public class Task {
         this.status = status;
         this.id = id;
         this.type = type;
+        this.startTime = LocalDateTime.now();
+        this.duration = Duration.ofMinutes(15);
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
+
+
+    }
+
+    public Task(String name, String description, Status status, int id, TaskType type, LocalDateTime startTime,
+                Duration duration) {
+
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.id = id;
+        this.type = type;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
     public Integer getEpicId() {
@@ -72,14 +123,41 @@ public class Task {
         return TaskType.TASK;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return "Задача-" +
+                "название: '" + name + '\'' +
+                ", Описание: '" + description + '\'' +
+                ", id: " + id + '\'' +
+                ", Статус: " + status + '\'' +
+                ", старт: " + startTime + '\'' +
+                ", продолжительность: " + duration +
+                ')';
     }
 
     @Override
@@ -87,6 +165,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
+
         return id == task.id;
     }
 

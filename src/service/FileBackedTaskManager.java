@@ -1,6 +1,7 @@
 package service;
 
 import converter.TaskConverter;
+import exception.ManagerIOException;
 import model.Epic;
 import model.Status;
 import model.SubTask;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -47,13 +50,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager manager = new FileBackedTaskManager(file, StandardCharsets.UTF_8);
         manager.init();
         return manager;
+
     }
 
     private void save() {
 
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            writer.write("id,type,name,status,description,epicId:");
+            writer.write("id,type,name,status,description,epicId,duration,startTime:");
             writer.newLine();
             for (Task task : tasks.values()) {
 
@@ -72,7 +76,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Нет файла: task.CSV");
+            throw new ManagerIOException("Нет файла: task.CSV");
         }
     }
 
@@ -87,12 +91,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 switch (task.getType()) {
                     case TASK:
                         tasks.put(id, task);
+                        checkTaskTime(task);
+                        prioritizedTasks.add(task);
                         break;
                     case EPIC:
                         epics.put(id, (Epic) task);
                         break;
                     case SUBTASK:
                         subTasks.put(id, (SubTask) task);
+                        checkTaskTime(task);
+                        prioritizedTasks.add(task);
                         break;
                 }
                 if (maxId < id) {
@@ -106,7 +114,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             }
         } catch (IOException e) {
-            throw new RuntimeException("Нет такого файла");
+            throw new ManagerIOException("Нет такого файла");
         }
         seq = maxId;
     }
@@ -120,12 +128,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Task task = switch (type) {
             case TASK ->
                     new Task(taskArray[2], taskArray[4], Status.valueOf(taskArray[3]), Integer.parseInt(taskArray[0]),
-                            TaskType.valueOf(taskArray[1]));
+                            TaskType.valueOf(taskArray[1]), LocalDateTime.parse(taskArray[7]),
+                            Duration.parse(taskArray[6]));
             case EPIC ->
                     new Epic(taskArray[2], taskArray[4], Status.valueOf(taskArray[3]), Integer.parseInt(taskArray[0]),
-                            TaskType.valueOf(taskArray[1]));
+                            TaskType.valueOf(taskArray[1]), LocalDateTime.parse(taskArray[7]),
+                            Duration.parse(taskArray[6]));
+
             case SUBTASK -> new SubTask(taskArray[2], taskArray[4], Status.valueOf(taskArray[3]),
-                    Integer.parseInt(taskArray[0]), Integer.parseInt(taskArray[5]), TaskType.valueOf(taskArray[1]));
+                    Integer.parseInt(taskArray[0]), Integer.parseInt(taskArray[5]), TaskType.valueOf(taskArray[1]),
+                    LocalDateTime.parse(taskArray[7]), Duration.parse(taskArray[6]));
         };
 
 
