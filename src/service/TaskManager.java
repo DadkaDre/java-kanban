@@ -46,6 +46,8 @@ public interface TaskManager {
 
     List<SubTask> getAllSubTasksEpic(Epic epic);
 
+    List<Task> getPrioritizedTasks();
+
     List<Task> getHistory();
 
     Map<Integer, Task> getTasks();
@@ -53,4 +55,8 @@ public interface TaskManager {
     Map<Integer, SubTask> getSubTasks();
 
     Map<Integer, Epic> getEpics();
+
+    boolean validateTasks(Task t, Task task);
+
+    void updateStatus(Epic epic);
 }

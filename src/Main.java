@@ -1,11 +1,10 @@
 import model.Epic;
 import model.Status;
 import model.SubTask;
-import service.FileBackedTaskManager;
 import service.Managers;
 import service.TaskManager;
 
-import java.io.File;
+import java.time.LocalDateTime;
 
 
 public class Main {
@@ -16,14 +15,23 @@ public class Main {
 
         Epic epic = new Epic("Эпик", "Описание эпика");
         taskManager1.createEpic(epic);
+        System.out.println(epic.getStartTime());
+        System.out.println(epic.getDuration());
+        System.out.println(epic.getEndTime());
 
-        SubTask subTask = new SubTask("Подзадача", "Описание", Status.NEW, epic.getId());
+        System.out.println("После");
+
+        SubTask subTask = new SubTask("Подзадача", "Описание", Status.NEW, epic.getId(),
+                LocalDateTime.of(2024, 06, 10, 22, 38, 20), 15);
         taskManager1.createSubTask(subTask);
 
-        TaskManager taskManager = FileBackedTaskManager.loadFromFile(new File("task.CSV"));
-        System.out.println(taskManager.getAllEpics());
-        System.out.println(taskManager.getSubTasks());
+        SubTask subTask1 = new SubTask("Подзадача", "Описание", Status.NEW, epic.getId(),
+                LocalDateTime.of(2024, 06, 10, 23, 38, 20), 15);
+        taskManager1.createSubTask(subTask1);
 
+        System.out.println(epic.getStartTime());
+        System.out.println(epic.getDuration());
+        System.out.println(epic.getEndTime());
 
     }
 }
