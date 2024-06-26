@@ -446,6 +446,5 @@ class HttpTaskServerTest {
         assertEquals(200, response.statusCode());
         List<Task> expectedTasks = manager.getPrioritizedTasks();
         assertEquals(expectedTasks.size(), 2);
-        //.
     }
 }
