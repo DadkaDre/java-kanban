@@ -55,7 +55,7 @@ class EpicTest {
     @Test
     void deleteList() {
         Epic epic = taskManager.createEpic(container.getEpic());
-        taskManager.createSubTask(new SubTask("Название", "Описание",
+        SubTask subTask = taskManager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId()));
         ArrayList<SubTask> epicSubTasksList = epic.getListSubTasks();
 

@@ -6,25 +6,18 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    public void setListSubTasks(ArrayList<SubTask> listSubTasks) {
-        this.listSubTasks = listSubTasks;
-    }
-
-    private transient ArrayList<SubTask> listSubTasks = new ArrayList<>();
+    private final ArrayList<SubTask> listSubTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
-        super(name, description, Status.NEW, LocalDateTime.now(), 0);
+        super(name, description, Status.NEW, LocalDateTime.now(), Duration.ofMinutes(0));
     }
 
     public Epic(String name, String description, Status status, int id) {
         super(name, description, status, id);
     }
 
-    public Epic(String name, String description, Status status, LocalDateTime startTime, int duration) {
-        super(name, description, status, startTime, duration);
-    }
-
-    public Epic(String name, String description, Status status, int id, TaskType type, LocalDateTime startTime, Duration duration) {
+    public Epic(String name, String description, Status status, int id, TaskType type, LocalDateTime startTime,
+                Duration duration) {
         super(name, description, status, id, type, startTime, duration);
     }
 
@@ -58,8 +51,7 @@ public class Epic extends Task {
                 ", id: " + getId() + '\'' +
                 ", cтатус: " + getStatus() + '\'' +
                 ", старт: " + getStartTime() + '\'' +
-                ", продолжительность: " + getDuration() +
-                ", окончание эпика: " + getEndTime() +
+                ", описание: " + getDuration() +
                 ')';
     }
 }

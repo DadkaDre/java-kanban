@@ -13,4 +13,5 @@ public class TaskConverter {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + "," +
                 task.getDescription() + "," + task.getEpicId() + "," + task.getDuration() + "," + task.getStartTime();
     }
+
 }
