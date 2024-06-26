@@ -31,11 +31,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void init() {
         manager = createTaskManager();
 
+
     }
 
-    // TaskManager taskManager = Managers.getDefault();
     ObjectsContainerTest container = new ObjectsContainerTest();
-
 
     @DisplayName("При изменении полей подзадачи, эпика  изменятся аналогично ")
     @ParameterizedTest
@@ -48,13 +47,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         SubTask subTask = new SubTask("Подзадача", "Описание",
                 Status.NEW, epic.getId(),
-                LocalDateTime.of(2024, 06, 06, 22, minutes, 20), duration);
+                LocalDateTime.of(2024, 6, 6, 22, minutes, 20), duration);
         manager.createSubTask(subTask);
 
         manager.updateStatus(epic);
-        Epic epic2 = epic;
         assertEquals(epic.getStartTime(), subTask.getStartTime(), "Время старта эпика и подзадачи не совпадает");
-        assertEquals(epic2.getEndTime(), subTask.getEndTime(), "Поля окончания эпика и подзадачи не совпадают");
+        assertEquals(epic.getEndTime(), subTask.getEndTime(), "Поля окончания эпика и подзадачи не совпадают");
     }
 
 
@@ -222,8 +220,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldDeleteALLEpics() {
 
 
-        Epic epic = manager.createEpic(new Epic("Эпик", "Описание"));
-        Epic epic1 = manager.createEpic(new Epic("эпик2", "Описание2"));
+        manager.createEpic(new Epic("Эпик", "Описание"));
+        manager.createEpic(new Epic("эпик2", "Описание2"));
 
         manager.deleteALLEpics();
 
@@ -374,10 +372,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void getAllSubTasksEpic() {
         Epic epic = manager.createEpic(container.getEpic());
-        SubTask subTask = manager.createSubTask(new SubTask("Название", "Описание",
+        manager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId()));
-        SubTask subTask1 = manager.createSubTask(new SubTask("Название2", "Описание2",
+        manager.createSubTask(new SubTask("Название2", "Описание2",
                 Status.NEW, epic.getId(), LocalDateTime.now().plusMinutes(45), 15));
+
         List<SubTask> subTaskList = manager.getAllSubTasks();
 
         assertEquals(2, subTaskList.size(), "Кол-во добавляемых элементов и кол-во элементов при " +
@@ -391,8 +390,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         SubTask subTask = manager.createSubTask(new SubTask("Название", "Описание",
                 Status.NEW, epic.getId(), LocalDateTime.now(), 15));
 
-        SubTask subTask1 = manager.getIdSubTasks(subTask.getId());
-        Epic epic1 = manager.getIdEpics(epic.getId());
+        manager.getIdSubTasks(subTask.getId());
+        manager.getIdEpics(epic.getId());
 
         List<Task> historyList = manager.getHistory();
         assertEquals(2, historyList.size(), "Кол-во кол-во добавленных элементов в список истории " +
@@ -405,13 +404,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @EnumSource(Status.class)
     void shouldChangedStatusEpic(Status status) {
         Epic epic = manager.createEpic(container.getEpic());
-        SubTask subTask = manager.createSubTask(new SubTask("Название", "Описание",
+        manager.createSubTask(new SubTask("Название", "Описание",
                 status, epic.getId(), LocalDateTime.now(), 15));
-        SubTask subTask1 = manager.createSubTask(new SubTask("Название", "Описание",
-                status, epic.getId(), LocalDateTime.of(2024, 07, 10, 15, 58,
+        manager.createSubTask(new SubTask("Название", "Описание",
+                status, epic.getId(), LocalDateTime.of(2024, 7, 10, 15, 58,
                 24), 15));
         assertEquals(status, epic.getStatus(), "Cтатус эпика и подзадач не совпадают");
     }
-
-
 }

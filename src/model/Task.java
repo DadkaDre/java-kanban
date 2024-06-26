@@ -26,13 +26,13 @@ public class Task {
 
     }
 
-    public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+    public Task(String name, String description, Status status, LocalDateTime startTime, int duration) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.startTime = startTime;
-        this.duration = duration;
-        this.endTime = startTime.plusMinutes(duration.toMinutes());
+        this.duration = Duration.ofMinutes(duration);
+        this.endTime = startTime.plusMinutes(duration);
     }
 
     public Task(String name, String description, Status status, int id) {
@@ -41,19 +41,19 @@ public class Task {
         this.status = status;
         this.id = id;
         this.startTime = LocalDateTime.now();
-        this.duration = Duration.ofMinutes(15);
+        this.duration = Duration.ofMinutes(0);
         this.endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
 
-    public Task(String name, String description, Status status, int id, LocalDateTime startTime, Duration duration) {
+    public Task(String name, String description, Status status, int id, LocalDateTime startTime, int duration) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.id = id;
         this.startTime = startTime;
-        this.duration = duration;
-        this.endTime = startTime.plusMinutes(duration.toMinutes());
+        this.duration = Duration.ofMinutes(duration);
+        this.endTime = startTime.plusMinutes(duration);
     }
 
     public Task(String name, String description, Status status, int id, TaskType type) {
@@ -63,10 +63,20 @@ public class Task {
         this.id = id;
         this.type = type;
         this.startTime = LocalDateTime.now();
-        this.duration = Duration.ofMinutes(15);
+        this.duration = Duration.ofMinutes(0);
         this.endTime = startTime.plusMinutes(duration.toMinutes());
 
+    }
 
+    public Task(String name, String description, Status status, LocalDateTime startTime,
+                Duration duration) {
+
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
     public Task(String name, String description, Status status, int id, TaskType type, LocalDateTime startTime,
@@ -139,7 +149,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return endTime;
+        return endTime = startTime.plusMinutes(duration.toMinutes());
     }
 
     public void setEndTime(LocalDateTime endTime) {
@@ -156,6 +166,7 @@ public class Task {
                 ", Статус: " + status + '\'' +
                 ", старт: " + startTime + '\'' +
                 ", продолжительность: " + duration +
+                ", конец: " + endTime +
                 ')';
     }
 
