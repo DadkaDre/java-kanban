@@ -47,7 +47,7 @@ class HttpTaskServerTest {
     @Test
     public void shouldSaveTask() throws IOException, InterruptedException {
 
-        Task task = new Task("Test 2", "Testing task 2",
+        Task task = new Task("Задача", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
 
         String taskJson = gson.toJson(task);
@@ -66,7 +66,7 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Задача", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
     }
 
 
@@ -74,7 +74,7 @@ class HttpTaskServerTest {
     @Test
     public void shouldSaveEpic() throws IOException, InterruptedException {
 
-        Epic epic = new Epic("Test 2", "Testing task 2",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
 
         String taskJson = gson.toJson(epic);
@@ -93,17 +93,17 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Эпик", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
     }
 
     @DisplayName("Добавляем и проверяем сохранение подзадачи")
     @Test
     public void shouldSaveSubTask() throws IOException, InterruptedException {
-        Epic epic = new Epic("Test 2", "Testing task 2",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
-        SubTask subTask = new SubTask("Test 3", "Testing task 3",
+        SubTask subTask = new SubTask("Подзадача", "описание2",
                 Status.NEW, epic.getId(), LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         String subTaskJson = gson.toJson(subTask);
         HttpClient client = HttpClient.newHttpClient();
@@ -117,18 +117,18 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 3", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Подзадача", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
     }
 
     @DisplayName("Проверяем вызов существующей задачи")
     @Test
     public void shouldGetTasks() throws IOException, InterruptedException {
 
-        Task task = new Task("Test 2", "Testing task 2",
+        Task task = new Task("Задача", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createTask(task);
 
-        Task task2 = new Task("Test 3", "Testing task 3",
+        Task task2 = new Task("Задача2", "описание2",
                 Status.NEW, LocalDateTime.of(2024, 6, 13, 18, 38, 20), 15);
         manager.createTask(task2);
 
@@ -143,19 +143,19 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(2, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
-        assertEquals("Test 3", tasksFromManager.get(1).getName(), "Некорректное имя задачи");
+        assertEquals("Задача", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+        assertEquals("Задача2", tasksFromManager.get(1).getName(), "Некорректное имя задачи");
     }
 
     @DisplayName("Проверяем вызов существующих эпиков")
     @Test
     public void shouldGetEpics() throws IOException, InterruptedException {
 
-        Epic epic = new Epic("Test 2", "Testing task 2",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
-        Epic epic2 = new Epic("Test 3", "Testing task 3",
+        Epic epic2 = new Epic("Эпик2", "Описание2",
                 Status.NEW, LocalDateTime.of(2024, 6, 13, 18, 38, 20), 15);
         manager.createEpic(epic2);
 
@@ -173,22 +173,22 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Эпики не возвращаются");
         assertEquals(2, tasksFromManager.size(), "Некорректное количество эпиков");
-        assertEquals("Test 2", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
-        assertEquals("Test 3", tasksFromManager.get(1).getName(), "Некорректное имя задачи");
+        assertEquals("Эпик", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+        assertEquals("Эпик2", tasksFromManager.get(1).getName(), "Некорректное имя задачи");
     }
 
     @DisplayName("Проверяем получение всех подзадачи")
     @Test
     public void shouldGetSubTasks() throws IOException, InterruptedException {
-        Epic epic = new Epic("Test 1", "Testing task 1",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
-        SubTask subTask = new SubTask("Test 2", "Testing task 2",
+        SubTask subTask = new SubTask("Подзадача", "Описание2",
                 Status.NEW, epic.getId(), LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createSubTask(subTask);
 
-        SubTask subTask2 = new SubTask("Test 3", "Testing task 3",
+        SubTask subTask2 = new SubTask("Подзадача2", "Описание3",
                 Status.NEW, epic.getId(), LocalDateTime.of(2024, 6, 13, 18, 38, 20), 15);
         manager.createSubTask(subTask2);
 
@@ -203,15 +203,15 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(2, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
-        assertEquals("Test 3", tasksFromManager.get(1).getName(), "Некорректное имя задачи");
+        assertEquals("Подзадача", tasksFromManager.get(0).getName(), "Некорректное имя задачи");
+        assertEquals("Подзадача2", tasksFromManager.get(1).getName(), "Некорректное имя задачи");
     }
 
     @DisplayName("Проверяем вызов задачи по ID")
     @Test
     public void shouldGetTaskByID() throws IOException, InterruptedException {
 
-        Task task = new Task("Test 2", "Testing task 2",
+        Task task = new Task("Задача", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createTask(task);
 
@@ -227,7 +227,7 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Задача", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
 
     }
 
@@ -235,7 +235,7 @@ class HttpTaskServerTest {
     @Test
     public void shouldGetEpicById() throws IOException, InterruptedException {
 
-        Epic epic = new Epic("Test 2", "Testing task 2",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
@@ -254,18 +254,18 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Эпики не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество эпиков");
-        assertEquals("Test 2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Эпик", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
 
     }
 
     @DisplayName("Проверяем получение подзадачи по ID")
     @Test
     public void shouldGetSubTaskById() throws IOException, InterruptedException {
-        Epic epic = new Epic("Test 1", "Testing task 1",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
-        SubTask subTask = new SubTask("Test 2", "Testing task 2",
+        SubTask subTask = new SubTask("Эпик2", "Описание",
                 Status.NEW, epic.getId(), LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createSubTask(subTask);
 
@@ -281,7 +281,7 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Эпик2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
 
     }
 
@@ -289,7 +289,7 @@ class HttpTaskServerTest {
     @Test
     public void shouldDeleteEpicById() throws IOException, InterruptedException {
 
-        Epic epic = new Epic("Test 2", "Testing task 2",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
@@ -297,7 +297,6 @@ class HttpTaskServerTest {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8088/epics/" + epic.getId());
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
-
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -314,7 +313,7 @@ class HttpTaskServerTest {
     @Test
     public void shouldDeleteTaskById() throws IOException, InterruptedException {
 
-        Task task = new Task("Test 2", "Testing task 2",
+        Task task = new Task("Задача", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createTask(task);
 
@@ -333,11 +332,11 @@ class HttpTaskServerTest {
     @DisplayName("Проверяем удаление подзадачи по ID")
     @Test
     public void shouldDeleteSubTaskById() throws IOException, InterruptedException {
-        Epic epic = new Epic("Test 1", "Testing task 1",
+        Epic epic = new Epic("Эпик", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createEpic(epic);
 
-        SubTask subTask = new SubTask("Test 2", "Testing task 2",
+        SubTask subTask = new SubTask("Подзадача", "Описание 2",
                 Status.NEW, epic.getId(), LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createSubTask(subTask);
 
@@ -356,12 +355,12 @@ class HttpTaskServerTest {
     @Test
     public void shouldUpdateTask() throws IOException, InterruptedException {
 
-        Task task = new Task("Test 2", "Testing task 2",
+        Task task = new Task("Задача", "Описание",
                 Status.NEW, LocalDateTime.of(2024, 7, 13, 18, 38, 20), 15);
         manager.createTask(task);
 
 
-        Task task1 = new Task("Test 3", "Testing task 3",
+        Task task1 = new Task("Задача2", "Описание2",
                 Status.NEW, task.getId(), LocalDateTime.of(2024, 3, 13, 18, 38, 20), 15);
 
         String taskJson = gson.toJson(task1);
@@ -377,7 +376,7 @@ class HttpTaskServerTest {
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
-        assertEquals("Test 3", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
+        assertEquals("Задача2", tasksFromManager.getFirst().getName(), "Некорректное имя задачи");
     }
 
     @DisplayName("Проверяем обновление подзадачи")
