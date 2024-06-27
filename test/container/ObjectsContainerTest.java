@@ -23,9 +23,6 @@ public class ObjectsContainerTest {
         return epic;
     }
 
-    public SubTask getSubTask() {
-        return subTask;
-    }
 }
 
 
