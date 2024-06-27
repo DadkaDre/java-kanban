@@ -21,7 +21,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
                 if (exchange.getRequestMethod().equals(HttpMethods.GET)) {
                     writeResponse(exchange, getGson().toJson(taskManager.getPrioritizedTasks()), 200);
                 } else
-                    writeResponse(exchange, "Ошибка при обработке запроса", 404);
+                    writeResponse(exchange, "Ошибка при обработке запроса", 400);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
